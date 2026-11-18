@@ -1,0 +1,101 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. Tabel Pelanggan (Customer)
+model Pelanggan {
+  idPelanggan String       @id @default(uuid())
+  nama        String
+  noWhatsApp  String       @unique
+  kendaraan   Kendaraan[]
+}
+
+// 2. Tabel Kendaraan
+model Kendaraan {
+  idKendaraan    String       @id @default(uuid())
+  noPolisi       String       @unique
+  merk           String
+  warna          String
+  catatanKondisi String?
+  idPelanggan    String
+  pelanggan      Pelanggan    @relation(fields: [idPelanggan], references: [idPelanggan], onDelete: Cascade)
+  orderServis    OrderServis[]
+}
+
+// 3. Tabel Order Servis (Inti Transaksi)
+model OrderServis {
+  idOrder             String               @id @default(uuid())
+  tanggalMasuk        DateTime             @default(now())
+  targetSelesai       DateTime?
+  statusOrder         String               @default("Menunggu Pengerjaan")
+  totalEstimasi       Float                @default(0)
+  idKendaraan         String
+  kendaraan           Kendaraan            @relation(fields: [idKendaraan], references: [idKendaraan])
+  spkDigital          SPKDigital?
+  panelPerbaikan      PanelPerbaikan[]
+  kerusakanTambahan   KerusakanTambahan[]
+  progressServis      ProgressServis[]
+}
+
+// 4. Tabel SPK Digital (Aktor Administrasi - UC-05)
+model SPKDigital {
+  noSPK          String      @id @default(uuid())
+  tanggalTerbit  DateTime    @default(now())
+  serviceAdvisor String
+  idOrder        String      @unique
+  orderServis    OrderServis @relation(fields: [idOrder], references: [idOrder], onDelete: Cascade)
+}
+
+// 5. Tabel Panel Perbaikan & Biaya
+model PanelPerbaikan {
+  idPanel       String      @id @default(uuid())
+  namaPanel     String      
+  jenisTindakan String      
+  biayaEstimasi Float
+  idOrder       String
+  orderServis   OrderServis @relation(fields: [idOrder], references: [idOrder], onDelete: Cascade)
+}
+
+// 6. Tabel Kerusakan Tambahan / Add-on (Aktor Teknisi - UC-08 & Pelanggan - UC-02)
+model KerusakanTambahan {
+  idKerusakan    String      @id @default(uuid())
+  deskripsi      String
+  fotoBukti      String      
+  estimasiBiaya  Float
+  statusApproval String      @default("Pending") 
+  idOrder        String
+  orderServis    OrderServis @relation(fields: [idOrder], references: [idOrder], onDelete: Cascade)
+}
+
+// 7. Tabel Progress Servis (Aktor Teknisi - UC-07)
+model ProgressServis {
+  idProgres    String      @id @default(uuid())
+  tahap        String      
+  persetujuan  Int         @default(0) 
+  waktuUpdate  DateTime    @default(now())
+  idOrder      String
+  orderServis  OrderServis @relation(fields: [idOrder], references: [idOrder], onDelete: Cascade)
+}
+
+// 8. Tabel Pengguna Internal (Admin, Teknisi, Owner - UC-03)
+model PenggunaInternal {
+  idPengguna   String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  peran        String   
+}
+
+// 9. Tabel Laporan Operasional & Omzet (Aktor Owner - UC-09)
+model LaporanOperasional {
+  idLaporan     String   @id @default(uuid())
+  periode       String   
+  jumlahSelesai Int      @default(0)
+  pemasukan     Float    @default(0)
+  pengeluaran   Float    @default(0)
+  labaBersih    Float    @default(0)
+}
