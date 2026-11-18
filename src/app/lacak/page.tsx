@@ -9,7 +9,6 @@ function DetailPelacakanContent() {
   const plat = searchParams.get('plat') || 'W 1234 AB';
 
   // 1. STATE UTAMA: Default diset 'proses' (tengah dikerjakan teknisi & ada temuan kerusakan)
-  // Nanti jika teknisi lapangan mengubah status jadi selesai, state ini berubah jadi 'selesai'
   const [statusUnit, setStatusUnit] = useState<'proses' | 'selesai'>('proses');
   const [statusPersetujuan, setStatusPersetujuan] = useState<'pending' | 'disetujui' | 'ditolak'>('pending');
 
@@ -95,11 +94,11 @@ function DetailPelacakanContent() {
               </div>
             </div>
 
-            {/* Alur Tahapan Pengerjaan Unit (6 Tahapan) */}
+            {/* Alur Tahapan Pengerjaan Unit (Responsif: Grid 2 kolom di HP, 3 kolom di Tablet, 6 kolom di Desktop) */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6">
               <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-4 sm:mb-6">Alur Tahapan Pengerjaan Unit</h3>
               
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 <div className="bg-blue-50/70 border border-blue-200 p-3 rounded-xl text-center space-y-1">
                   <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto text-[10px] font-bold">✓</div>
                   <h4 className="text-[11px] font-bold text-slate-800 leading-tight">1. Penerimaan & SPK</h4>
@@ -332,7 +331,7 @@ function DetailPelacakanContent() {
                 </span>
               </div>
               
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 <div className="bg-blue-50/70 border border-blue-200 p-3 rounded-xl text-center space-y-1">
                   <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto text-[10px] font-bold">✓</div>
                   <h4 className="text-[11px] font-bold text-slate-800 leading-tight">Penerimaan & SPK</h4>
@@ -440,7 +439,7 @@ function DetailPelacakanContent() {
       <footer className="bg-white border-t border-slate-200 py-4 px-4 sm:px-6 text-center text-[11px] sm:text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
         <p>© 2026 Bengkel Cat Mobil & Body Repair AUTO-D Waru, Sidoarjo.</p>
         <p className="text-[10px] text-slate-400 flex items-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Sistem Pelacakan v1.0
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Sistem Pelacakan Operasional v1.0
         </p>
       </footer>
     </div>
